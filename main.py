@@ -22,18 +22,22 @@ def bisection_method(polynom, startPoint, endPoint, epsilon=0.0001):
     :param epsilon:
     :return:
     """
+    print("*** Bisection_Method ***")
+    partition(polynom, startPoint, endPoint, runBisection, epsilon)
+
+
+def partition(polynom, startPoint, endPoint, runMethod, epsilon=0.0001):
     x = sp.symbols('x')
     f = lambdify(x, polynom)
     fTag = calcDerived(polynom)
     error = calcError(startPoint, endPoint, epsilon)
     i = startPoint
-    print("*** Bisection_Method ***")
     while i < endPoint:
         j = i + 0.01
         c, iteration = runMethod(f, i, j, error, epsilon)
         if c is not None:
             print("root: " + str(c) + " ,\titeration: " + str(iteration))
-        c, iteration = runMethod(fTag, i, j, error, epsilon)    # derived
+        c, iteration = runMethod(fTag, i, j, error, epsilon)  # derived
         if c is not None:
             if -epsilon < f(c) < epsilon:
                 print("root: " + str(c) + " ,\titeration: " + str(iteration))
@@ -41,7 +45,7 @@ def bisection_method(polynom, startPoint, endPoint, epsilon=0.0001):
     print("------------------------")
 
 
-def runMethod(f, startA, endB, error, epsilon=0.0001):
+def runBisection(f, startA, endB, error, epsilon=0.0001):
     fXl = f(startA)
     fXr = f(endB)
     if (fXl * fXr) > 0:
@@ -114,7 +118,37 @@ def driver():
     # epsilon = pow(10, -10)
     printDerived(f)
     print("-------------")
-    bisection_method(f, startPoint, endPoint)
+    y = input("Enter 0 for bisection method, 1 for Newton Raphson, else for secant method")
+    if y is 0:
+        bisection_method(f, startPoint, endPoint)
+    elif y is 1:
+        Newton_Raphson(f, startPoint, endPoint)
+    # else:
+    #     secant_method(f, startPoint, endPoint)
 
 
 driver()
+
+# -------------- part 2 -------------
+
+
+def Newton_Raphson(polynom, startPoint, endPoint, epsilon=0.0001):
+    print("*** Newton Raphson ***")
+    partition(polynom, startPoint, endPoint, runNewton, epsilon)
+
+
+def runNewton(f, startA, endB, epsilon=0.0001):
+    fXl = f(startA)
+    fXr = f(endB)
+    if (fXl * fXr) > 0:
+        return None, None
+    i = -1
+    c = (startA + endB) / 2
+    newC = abs(startA + endB)
+    while abs(newC - c) > epsilon:
+        i += 1
+        newC = c - (f(c)/calcDerived(f)(c))
+    if i >= 100:
+        print("Could not find root, The function is not suitable for Newton Raphson")
+        return None, None
+    return c, i
