@@ -134,6 +134,12 @@ def calcError(start, end, epsilon):
 
 
 def Newton_Raphson(polynom, startPoint, endPoint, choice, epsilon):
+    """
+    :param polynom: original func
+    :param startPoint: start of range
+    :param endPoint: end of range
+    :param epsilon: precision
+    """
     print("*** Newton Raphson ***")
     partition(polynom, startPoint, endPoint, runNewton, choice, epsilon)
 
@@ -164,6 +170,12 @@ def runNewton(f, startA, endB, epsilon):
 
 
 def secant_method(polynom, startPoint, endPoint, choice, epsilon):
+    """
+    :param polynom: original func
+    :param startPoint: start of range
+    :param endPoint: end of range
+    :param epsilon: precision
+    """
     print("*** secant method ***")
     partition(polynom, startPoint, endPoint, runSecant, choice, epsilon)
 
