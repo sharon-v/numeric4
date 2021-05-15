@@ -8,8 +8,6 @@ from sympy.utilities.lambdify import lambdify
 
 
 # bisection_method
-# Xm = (Xl + Xr) / 2
-# (f(xl) * f(xm)) < 0
 # newton_raphson
 # secant_method
 
@@ -18,7 +16,7 @@ def bisection_method(polynom, startPoint, endPoint, choice, epsilon):
     :param polynom: original func
     :param startPoint: start of range
     :param endPoint: end of range
-    :param epsilon: precision
+    :param epsilon: range of error allowed
     """
     print("*** Bisection_Method ***")
     partition(polynom, startPoint, endPoint, runBisection, choice, epsilon)
@@ -32,7 +30,7 @@ def partition(polynom, startPoint, endPoint, runMethod, choice, epsilon):
     :param endPoint: end of range
     :param runMethod: function of the method to solve by
     :param choice: index of the method to solve by
-    :param epsilon: precision
+    :param epsilon: range of error allowed
     :return: prints all roots if there are any
     """
     x = sp.symbols('x')
@@ -41,7 +39,7 @@ def partition(polynom, startPoint, endPoint, runMethod, choice, epsilon):
     fTag = lambdify(x, polynomTag)
     i = startPoint
     while i < endPoint:
-        j = i + 0.1  # #################
+        j = i + 0.1
         # function ######################################################
         if choice is 0:  # bisection
             error = calcError(startPoint, endPoint, epsilon)
@@ -66,11 +64,19 @@ def partition(polynom, startPoint, endPoint, runMethod, choice, epsilon):
         if c is not None:
             if -epsilon < f(c) < epsilon:
                 print("root: " + str(c) + " ,\titeration: " + str(iteration))
-        i += 0.1  # #########################
+        i += 0.1
     print("------------------------")
 
 
 def runBisection(f, startA, endB, error, epsilon):
+    """
+    :param f: original func
+    :param startA: start of range
+    :param endB: end of range
+    :param error: max number of iterations
+    :param epsilon: range of error allowed
+    :return: root in this range if exists
+    """
     fXl = f(startA)
     fXr = f(endB)
     if (fXl * fXr) > 0:
@@ -92,9 +98,12 @@ def runBisection(f, startA, endB, error, epsilon):
 
 
 def printDerived(my_f):
-    # print the derivative in a symbol way
+    """
+    print the derivative in a symbol way
+    :param my_f: original func
+    :return: print func and derived
+    """
     x = sp.symbols('x')
-    # my_f = x ** 3 + 2 * x + 5
     print("my_func: ", my_f)
     my_f1 = sp.diff(my_f, x)
     print("f' : ", my_f1)
@@ -108,25 +117,18 @@ def calcDerived(f):
     :return: the derived without lambdify
     """
     # calc the derivative from func -> lambdify
-    # f = x ** 3 + 2 * x + 5
     x = sp.symbols('x')
     f_prime = f.diff(x)
-    # print("f : ", f)
-    # print("f' : ", f_prime)
-    # f = lambdify(x, f)
-    # f_prime = lambdify(x, f_prime)
-    # print("f(1):", f(1))
-    # print("f'(1):", f_prime(1))
     return f_prime
 
 
-# def calcVal(f, val):
-#     x = sp.symbols('x')
-#     func = lambdify(x, f)
-#     return func(val)
-
-
 def calcError(start, end, epsilon):
+    """
+    :param start: start of bigger range
+    :param end: end of bigger range
+    :param epsilon: range of error allowed
+    :return: max number of iteration for Bisection method
+    """
     return -(math.log(epsilon / (end - start)) / math.log(2))
 
 
@@ -134,11 +136,24 @@ def calcError(start, end, epsilon):
 
 
 def Newton_Raphson(polynom, startPoint, endPoint, choice, epsilon):
+    """
+    :param polynom: original func
+    :param startPoint: start of range
+    :param endPoint: end of range
+    :param epsilon: range of error allowed
+    """
     print("*** Newton Raphson ***")
     partition(polynom, startPoint, endPoint, runNewton, choice, epsilon)
 
 
 def runNewton(f, startA, endB, epsilon):
+    """
+    :param f: original func
+    :param startA: start of range
+    :param endB: end of range
+    :param epsilon: range of error allowed
+    :return: root in this range if exists
+    """
     x = sp.symbols('x')
     fTag = lambdify(x, calcDerived(f))
     f = lambdify(x, f)
@@ -164,11 +179,24 @@ def runNewton(f, startA, endB, epsilon):
 
 
 def secant_method(polynom, startPoint, endPoint, choice, epsilon):
+    """
+    :param polynom: original func
+    :param startPoint: start of range
+    :param endPoint: end of range
+    :param epsilon: range of error allowed
+    """
     print("*** secant method ***")
     partition(polynom, startPoint, endPoint, runSecant, choice, epsilon)
 
 
 def runSecant(f, startA, endB, epsilon):
+    """
+    :param f: original func
+    :param startA: start of range
+    :param endB: end of range
+    :param epsilon: range of error allowed
+    :return: root in this range if exists
+    """
     fXl = f(startA)
     fXr = f(endB)
     if (fXl * fXr) > 0:
@@ -194,25 +222,18 @@ def driver():
     """
     x = sp.symbols('x')
     # define polynom
-    # f = x ** 3 - x - 1
-    # f = x**2 - 1
-    # f = x ** 4 + x ** 3 - 3 * x ** 2
-    f = 4 * x ** 3 - 48 * x + 5
+    f = x ** 4 + x ** 3 - 3 * x ** 2
 
     # define range
-    # startPoint = 1
-    # endPoint = 2
-    # startPoint = -3
-    # endPoint = 2
-    startPoint = 2
-    endPoint = 4
+    startPoint = -3
+    endPoint = 2
 
     # define epsilon
     epsilon = 0.0001
-    # epsilon = pow(10, -10)
+
     printDerived(f)
     print("-------------")
-    choice = input("Enter 0 for bisection method, 1 for Newton Raphson, 2 for secant method, else for all\n")
+    choice = input("Enter 0 for Bisection method, 1 for Newton Raphson, 2 for Secant method, else for all\n")
     if choice is '0':
         bisection_method(f, startPoint, endPoint, 0, epsilon)
     elif choice is '1':
