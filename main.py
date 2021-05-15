@@ -125,6 +125,33 @@ def runNewton(f, startA, endB, epsilon=0.0001):
     return c, i
 
 
+# -------------- part 3 ----------------
+
+
+def secant_method(polynom, startPoint, endPoint, epsilon=0.0001):
+    print("*** secant_method ***")
+    partition(polynom, startPoint, endPoint, runSecant, epsilon)
+
+
+def runSecant(f, startA, endB, epsilon=0.0001):
+    fXl = f(startA)
+    fXr = f(endB)
+    if (fXl * fXr) > 0:
+        return None, None
+    i = -1
+    c = fXl
+    newC = fXr
+    while abs(newC - c) > epsilon:
+        i += 1
+        c = newC
+        newC = (c * f(newC) - newC * f(c)) / (f(newC) - f(c))
+    if i >= 100:
+        print("Could not find root, The function is not suitable for secant method")
+        return None, None
+    return c, i
+
+
+# --------------- part 4 ----------------
 def driver():
     """
     the main function of the program
@@ -147,8 +174,8 @@ def driver():
         bisection_method(f, startPoint, endPoint)
     elif choice is '1':
         Newton_Raphson(f, startPoint, endPoint)
-    # else:
-    #     secant_method(f, startPoint, endPoint)
+    else:
+        secant_method(f, startPoint, endPoint)
 
 
 driver()
