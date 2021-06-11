@@ -4,6 +4,7 @@
 import math
 
 import sympy as sp
+from sympy import ln
 from sympy.utilities.lambdify import lambdify
 
 
@@ -81,7 +82,7 @@ def runBisection(f, startA, endB, error, epsilon):
     fXr = f(endB)
     if (fXl * fXr) > 0:
         return None, None
-    i = -1
+    i = 0
     c = startA
     while endB - startA > epsilon and i < error:
         i += 1
@@ -161,16 +162,14 @@ def runNewton(f, startA, endB, epsilon):
     fXr = f(endB)
     if (fXl * fXr) > 0:
         return None, None
-    i = -1
+    i = 0
     c = (startA + endB) / 2
-    newC = abs(startA + endB)
     while i < 100:
         i += 1
-        temp = newC
         newC = c - (f(c) / fTag(c))
         if abs(newC - c) < epsilon:
             return newC, i
-        c = temp
+        c = newC
     print("Could not find root, The function is not suitable for Newton Raphson")
     return None, None
 
@@ -203,7 +202,7 @@ def runSecant(f, startA, endB, epsilon):
         return None, None
     c = startA
     newC = endB
-    i = -1
+    i = 0
     while i < 100:
         i += 1
         temp = newC
@@ -222,10 +221,13 @@ def driver():
     """
     x = sp.symbols('x')
     # define polynom
-    f = x ** 4 + x ** 3 - 3 * x ** 2
+    # f = x ** 4 + x ** 3 - 3 * x ** 2
+    f = ln(x)
 
     # define range
-    startPoint = -3
+    # startPoint = -3
+    # endPoint = 2
+    startPoint = 1
     endPoint = 2
 
     # define epsilon
